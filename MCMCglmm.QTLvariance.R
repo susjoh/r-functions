@@ -1,4 +1,3 @@
-
 require(msm)
 
 estVQ <- function(asremlmodel, dataframe, animalid, snpid){
@@ -37,7 +36,7 @@ estVQ <- function(asremlmodel, dataframe, animalid, snpid){
   beta <- summary(asremlmodel, all = T)$coef.fixed[2:3, 1]
   
   X <- 2*p*q
-  Y <- q^2
+  Y <- q^2 
   
   Vq.se <- deltamethod(~X*(-x2/2 + (-x2/2 + x1)*Y)^2, beta, C)  # standard error
   
