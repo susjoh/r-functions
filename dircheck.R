@@ -1,0 +1,1 @@
+dircheck <- function() system("cmd", input = "ls")
