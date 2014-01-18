@@ -1,7 +1,3 @@
-asremlmodel = lenmod.gwas.snp
-dataframe = horn.data.oldrm
-animalid = "ANIMAL"
-snpid = "OAR10_29469450.1"
 
 require(msm)
 
@@ -40,8 +36,10 @@ estVQ <- function(asremlmodel, dataframe, animalid, snpid){
   x2 <- C[2,2]   # sampling variance of the hom effect
   beta <- summary(asremlmodel, all = T)$coef.fixed[2:3, 1]
   
+  X <- 2*p*q
+  Y <- q^2
   
-  Vq.se <- deltamethod(~0.484*(-x2/2 + (-x2/2 + x1)*0.168)^2, beta, C)  # standard error
+  Vq.se <- deltamethod(~X*(-x2/2 + (-x2/2 + x1)*Y)^2, beta, C)  # standard error
   
   results <- list(Vq, Va, VarExplained, Vq.se)
   names(results) <- c("Vq", "Va", "VarExplained", "Vq.se")
