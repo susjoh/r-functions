@@ -1,5 +1,4 @@
 
-
 CumuPos<-function(scan.gwaa.object) {
   
   #~~ Extract results and calculate cumulative positions
@@ -22,6 +21,8 @@ CumuPos<-function(scan.gwaa.object) {
 
 
 FullGwasPlot<-function(cumu.object, corrected = FALSE, bonf = F) {
+  
+  require(ggplot2)
   
   #chrinfo <- data.frame(Chromosome = 0, Start = 0, Stop = 0)
   chrinfo <- NULL
@@ -85,6 +86,8 @@ FullGwasPlot<-function(cumu.object, corrected = FALSE, bonf = F) {
 
 FullPpPlot<-function(scan.gwaa.object,cumu.object, corrected = FALSE) {
   
+  require(ggplot2)
+  
   if(corrected){
     
     gwa_res.null<-data.frame(obs=sort(-log10(cumu.object$Pc1df)),
@@ -113,6 +116,7 @@ FullPpPlot<-function(scan.gwaa.object,cumu.object, corrected = FALSE) {
 mdsPlot <- function(mdsframe, trait){
   mdsframe$trait <- mdsframe[,trait]
   
+  require(ggplot2)
   ggplot(mdsframe, aes(X1, X2, col = factor(trait))) + 
     geom_point(size = 3, alpha = 0.7) +
     theme(axis.text.x  = element_text (size = 16, vjust = 0),
