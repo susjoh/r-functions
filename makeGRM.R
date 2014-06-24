@@ -1,7 +1,4 @@
-# grm.object <- grm.gcta
-# ids.object <- ids.gcta 
-# phenoframe <- horn.data.oldrm  
-# idcol <- 1
+# Provided by Camillo Berenos
 
 makeGRM <- function(grm.object, ids.object, phenoframe, idcol = 1){
   
@@ -16,15 +13,21 @@ makeGRM <- function(grm.object, ids.object, phenoframe, idcol = 1){
   nam<-as.factor( ids.object[,2]);
   
   #THE FOLLWING PART IS ESSENTIAL TO MAKE THE MATRIX CONTAIN THE EXACT SAME IDS AS THE PHENOTYPE FILE
-  rownames(X.grm)<-nam ;
-  colnames(X.grm)<-nam
+  rownames(X.grm) <- nam
+  colnames(X.grm) <- nam
   
-  attr(X.grm,"rowNames")<-as.factor(rownames(X.grm))
+  attr(X.grm,"rowNames") <- as.factor(rownames(X.grm))
   
   
+<<<<<<< HEAD
   d<- intersect(ids.object$V2,phenoframe$ANIMALx)#VECTOR OF IDs shared between phenotype and genotype file
   b<-match(phenoframe$ANIMALx,d,nomatch=20000)
   phenoframe<-as.data.frame(subset(phenoframe,b!=20000) )    #PHENOTYPE FILE THAT MACHES THE GENOTYPE FILE
+=======
+  d <- intersect(ids.object$V2,phenoframe$ANIMAL)#VECTOR OF IDs shared between phenotype and genotype file
+  b <- match(phenoframe$ANIMAL,d,nomatch=20000)
+  phenoframe <- as.data.frame(subset(phenoframe,b!=20000) )    #PHENOTYPE FILE THAT MACHES THE GENOTYPE FILE
+>>>>>>> origin/master
   
   cn<-match(ids.object[,2],d,nomatch=20000)
   nam2<-as.vector(subset(nam,cn!=20000))

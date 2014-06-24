@@ -1,5 +1,4 @@
-
-
+# FOR WINDOWS SYSTEMS ONLY!
 
 genabel2arlequin <- function(gwaa.data, GroupVec, outfile, Title, GroupTogether = T){
   
