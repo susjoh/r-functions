@@ -5,8 +5,8 @@
 
 makeGRM <- function(grm.object, ids.object, phenoframe, idcol = 1){
   
-  names(phenoframe)[idcol] <- "ANIMAL"
-  phenoframe$ANIMAL <- as.factor(phenoframe$ANIMAL)
+  names(phenoframe)[idcol] <- "ANIMALx"
+  phenoframe$ANIMALx <- as.factor(phenoframe$ANIMALx)
   
   elements<-length(ids.object[,1])
   X <- diag(elements)
@@ -22,8 +22,8 @@ makeGRM <- function(grm.object, ids.object, phenoframe, idcol = 1){
   attr(X.grm,"rowNames")<-as.factor(rownames(X.grm))
   
   
-  d<- intersect(ids.object$V2,phenoframe$ANIMAL)#VECTOR OF IDs shared between phenotype and genotype file
-  b<-match(phenoframe$ANIMAL,d,nomatch=20000)
+  d<- intersect(ids.object$V2,phenoframe$ANIMALx)#VECTOR OF IDs shared between phenotype and genotype file
+  b<-match(phenoframe$ANIMALx,d,nomatch=20000)
   phenoframe<-as.data.frame(subset(phenoframe,b!=20000) )    #PHENOTYPE FILE THAT MACHES THE GENOTYPE FILE
   
   cn<-match(ids.object[,2],d,nomatch=20000)
@@ -39,7 +39,7 @@ makeGRM <- function(grm.object, ids.object, phenoframe, idcol = 1){
   attr(X2.grm,"rowNames")<-as.factor(nam2)
   
   
-  phenoframe$ANIMAL<-as.factor(phenoframe$ANIMAL)
+  phenoframe$ANIMALx<-as.factor(phenoframe$ANIMALx)
   
   x <- list()
   x[["grm"]] <- X2.grm
