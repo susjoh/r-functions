@@ -34,5 +34,32 @@ ASReml.EstEffects <- function(model){
     x[effname,"SE"] <- se
   }
   
+  #~~ NEED TO FIX THIS ADDITION FROM JISCA
+  
+  VC <- summary(model)$varcomp
+  PrV <-  setNames(VC[,2] / sum(VC[,2]), rownames(VC))
+  n <- nrow(VC)
+  i <- rep(1:n, 1:n)
+  j <- sequence(1:n)
+  vcov <- matrix(NA,n,n)
+  vcov[cbind(i,j)] <- model$ai
+  vcov[upper.tri(vcov)] <- t(vcov)[upper.tri(vcov)]
+  vcovX <- vcov[-n,-n]   # exclude residual variance; irrelevant for proportions
+  PrV.SE <- numeric()
+  for (k in 1:(n-1)) {
+    PrV.SE[k] <- sqrt(1/sum(VC$gamma)^4 *
+                        (sum(VC$gamma[-k])^2 * diag(vcovX)[k] +
+                           VC$gamma[k]^2 * sum(vcovX[-k,-k]) - # diagonal & off-diagonal
+                           2*VC$gamma[k] * sum(VC$gamma[-k]) * sum(vcovX[k,-k])))
+  }
+  PrV.SE[n] <- sqrt(1/sum(VC$gamma)^4 * sum(vcovX))
+  
+  #~~~
+  
+  x[nrow(x), ncol(x)] <- PrV.SE[n]
+  
+  
   x
 }
+
+
