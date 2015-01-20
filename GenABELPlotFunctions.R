@@ -1,9 +1,30 @@
 
 CumuPos<-function(scan.gwaa.object) {
   
+
+  
   #~~ Extract results and calculate cumulative positions
   gwa_res <- results(scan.gwaa.object)
-  gwa_res$Chromosome <- as.numeric(as.character(gwa_res$Chromosome))
+  
+  gwa_res$Chromosome <- as.character(gwa_res$Chromosome)
+  
+  if("X" %in% gwa_res$Chromosome){
+    chrvec <- unique(gwa_res$Chromosome)
+    
+    if(length(chrvec == 1)){
+      print("Assuming X chromosome is chromosome 27 - this function will be fixed in future")
+      gwa_res$Chromosome[which(gwa_res$Chromosome == "X")] <- 27
+    }
+      
+    if(length(chrvec > 1)){
+      chrvec <- as.numeric(chrvec[-which(chrvec == "X")])
+      gwa_res$Chromosome[which(gwa_res$Chromosome == "X")] <- max(chrvec) + 1
+    }
+    
+  }
+  
+  gwa_res$Chromosome <- as.numeric(gwa_res$Chromosome)
+  
   gwa_res <- gwa_res[with(gwa_res, order(Chromosome,Position)), ]
   
   gwa_res$Diff <- c(0,diff(gwa_res$Position))
@@ -20,7 +41,7 @@ CumuPos<-function(scan.gwaa.object) {
 
 
 
-FullGwasPlot<-function(cumu.object, corrected = FALSE, bonf = F) {
+FullGwasPlot<-function(cumu.object, corrected = FALSE, bonf = F, lambda = NULL) {
   
   require(ggplot2)
   
@@ -47,6 +68,11 @@ FullGwasPlot<-function(cumu.object, corrected = FALSE, bonf = F) {
   
   
   if(corrected){  
+    
+    if(!is.null(lambda)){
+      cumu.object$Pc1df <- 1-pchisq(cumu.object$chi2.1df/lambda, 1)
+      warning("lambda adjusted in plot only")
+    }
     
     ggplot(cumu.object, aes(Cumu, -log10(Pc1df), col = factor(Chromosome))) +
       geom_point(size = 3.5,alpha = 0.4) +
@@ -84,19 +110,24 @@ FullGwasPlot<-function(cumu.object, corrected = FALSE, bonf = F) {
 
 
 
-FullPpPlot<-function(scan.gwaa.object,cumu.object, corrected = FALSE) {
+FullPpPlot<-function(scan.gwaa.object = NULL, cumu.object, corrected = FALSE, lambda = NULL) {
   
   require(ggplot2)
   
   if(corrected){
     
+    if(!is.null(lambda)){
+      cumu.object$Pc1df <- 1-pchisq(cumu.object$chi2.1df/lambda, 1)
+      warning("lambda adjusted in plot only")
+    }
+    
     gwa_res.null<-data.frame(obs=sort(-log10(cumu.object$Pc1df)),
-                             exp=sort(-log10(seq(1/nsnps(scan.gwaa.object),1,1/nsnps(scan.gwaa.object)))))
+                             exp=sort(-log10(seq(1/nrow(cumu.object),1,1/nrow(cumu.object)))))
     
   } else {
     
     gwa_res.null<-data.frame(obs=sort(-log10(cumu.object$P1df)),
-                             exp=sort(-log10(seq(1/nsnps(scan.gwaa.object),1,1/nsnps(scan.gwaa.object)))))
+                             exp=sort(-log10(seq(1/nrow(cumu.object),1,1/nrow(cumu.object)))))
     
   }
   
